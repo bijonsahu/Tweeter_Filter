@@ -1,0 +1,52 @@
+Instructions to run the code.
+>> 1. This is just a PROTOTYPE done using brut force approach and IDEA which could be done using minimal softwares.
+   2. This code peice is not OPTIMZED for best results and oriented for scaling i.e there can be better approaches.
+   3. This just gives you an idea of how can you approach this type of pipeline plumbing.
+   4. Create a table where you want to insert the tweets <use createDB.py>
+   5. Install KAFKA,SQLITE3(or any other SQL/NoSQL suffices this) and ZOOKEEPER.
+   6. Run the producer with the TOPIC name hardcoded in the code(Produer.py) ='tweeterdata' <use Producer.py>
+   7. Run the consumer with the TOPIC name,Bootstrap server name and port.<use Consumer.py>
+   
+   ********* Current Design************
+   >>Extracting tweeter API with filter and pushing it to KAFKA TOPIC (Can be scaled).
+   >>Reciving the same message from TOPIC and further filtering based on payload.
+   >>Pushing the filtered records to DATABASE.
+   ****************************************
+
+ What are the risks involved in building such a pipeline?
+   >> 1. There can be lot's of bottlenecking when pushing into DATABASE and pushing into KAFKA.
+      2. OPENING and COMMITING DB connections increases the latancy at every record insert.
+      3. KAFKA BROKER needs to be relaible.
+      4. Finding duplicates needs a proper hashing of TEXT content and also captured as part of record insert.
+      5. Dynamic upscaling is not present if load increases in the TOPIC.
+   
+ How would you roll out the pipeline going from proof-of-concept to a production-ready solution?
+   >> 1. I would change my design into more scalable components via using CONFLUENT UTILITIES.
+   **************Prospective Design********
+   >> Rather than me pooling data from TWITTER I will like to use a PUSH EVENT mechanism from TWITTER API.
+   >> While I push the filtered record into KAFKA , I will ensure I push the schema into SCHEMA_REGISTRY.
+   >> I can directly use KAFKA CONNECT API to push the data into any database with tables using same stored in schema registery.
+   ***************************************** 
+      2. Handling error for each an every integration to any component.
+      3. Using the solution as UTILITY as a API with FILTER parameter as input.
+      4. Dependancies of softwares used check using DOCKER.
+      5. Making each component loosly couple so that they can be replaced any time.
+
+ What would a production-ready solution entail that a POC wouldn't?
+   >> 1.Complete PLAYBOOK of the PIPELINE so that any one can use it as a UTILITY as a SERVICE.
+      2.POC's are more of running HAPPY PATH which can be modularised/standardized based on TIME and RESOURCE avalabile.
+      
+ What is the level of effort required to deliver each phase of the solution?
+   >> We can always divide the POC based on each module 
+       a> best apporoach evaluation time
+       b> integration time
+       c> and testing time
+
+ What is your estimated timeline for delivery for a production-ready solution?
+   >>  a> Time to transfer into new infrastruture from POC to PROD.
+       b> Solution review with PEERs before trying to start the PROD built.
+       c> Test Data Avilable in PROD.
+       d> Impact on common components if any.
+       e> Adding cosmetic changes to make it Utility as Service.
+       f> Performance testing in LIVE like INFRA and LIVE like DATA.
+       g> Adherance to any rules and regulation before start of development.
